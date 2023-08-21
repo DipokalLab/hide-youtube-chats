@@ -29,7 +29,7 @@ class HideBox {
         this.root.style.zIndex = '10000000000'
 
         this.box = document.createElement("div")
-        this.box.style.backgroundColor = '#ffffff'
+        this.box.style.backgroundColor = '#161617'
         this.box.style.position = 'absolute'
         this.box.style.top = '0px'
         this.box.style.left = '0px'
@@ -42,7 +42,7 @@ class HideBox {
             w: '100%',
             h: '1rem',
             x: '0px',
-            y: '-5px',
+            y: '-1rem',
             ref: 'top',
             cursorStyle: 'ns-resize'
         })
@@ -51,7 +51,7 @@ class HideBox {
             w: '100%',
             h: '1rem',
             x: '0px',
-            y: '105%',
+            y: '100%',
             ref: 'bottom',
             cursorStyle: 'ns-resize'
         })
@@ -59,7 +59,7 @@ class HideBox {
         const leftResize = this.createResize({
             w: '1rem',
             h: '100%',
-            x: '-5px',
+            x: '-1rem',
             y: '0px',
             ref: 'left',
             cursorStyle: 'ew-resize'
@@ -68,7 +68,7 @@ class HideBox {
         const rightResize = this.createResize({
             w: '1rem',
             h: '100%',
-            x: '105%',
+            x: '100%',
             y: '0px',
             ref: 'right',
             cursorStyle: 'ew-resize'
@@ -90,7 +90,7 @@ class HideBox {
         resize.style.left = x
         resize.style.width = w
         resize.style.height = h
-        resize.style.backgroundColor = 'blue'
+        resize.style.backgroundColor = '#161617'
         resize.style.cursor = cursorStyle
         resize.setAttribute("ref", ref)
 
@@ -117,8 +117,6 @@ class HideBox {
             return 0
         }
         this.disableMove()
-
-        console.log(this.targetResize , e, e.clientY - this.clickPosition.y, this.clickPosition.y )
 
         let h = e.clientY - this.clickPosition.y
         let w = e.clientX - this.clickPosition.x
