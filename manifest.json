@@ -7,5 +7,8 @@
         "matches": ["https://www.youtube.com/"],
         "js": ["./script.js"],
         "run_at": "document_start"
-    }]
+    }],
+    "action": {
+        "default_popup": "popup.html"
+    }
 }
