@@ -74,11 +74,53 @@ class HideBox {
             cursorStyle: 'ew-resize'
         })
 
+        const topLeftResize = this.createResize({
+            w: '1rem',
+            h: '1rem',
+            x: '-1rem',
+            y: '-1rem',
+            ref: 'top-left',
+            cursorStyle: 'nwse-resize'
+        })
+
+
+        const topRightResize = this.createResize({
+            w: '1rem',
+            h: '1rem',
+            x: '100%',
+            y: '-1rem',
+            ref: 'top-right',
+            cursorStyle: 'nesw-resize'
+        })
+
+        
+        const bottomLeftResize = this.createResize({
+            w: '1rem',
+            h: '1rem',
+            x: '-1rem',
+            y: '100%',
+            ref: 'bottom-left',
+            cursorStyle: 'nesw-resize'
+        })
+
+        const bottomRightResize = this.createResize({
+            w: '1rem',
+            h: '1rem',
+            x: '100%',
+            y: '100%',
+            ref: 'bottom-right',
+            cursorStyle: 'nwse-resize'
+        })
+
         this.root.appendChild(this.box)
         this.root.appendChild(topResize)
         this.root.appendChild(bottomResize)
         this.root.appendChild(leftResize)
         this.root.appendChild(rightResize)
+        this.root.appendChild(topLeftResize)
+        this.root.appendChild(topRightResize)
+        this.root.appendChild(bottomLeftResize)
+        this.root.appendChild(bottomRightResize)
 
         
     }
@@ -122,40 +164,108 @@ class HideBox {
         let w = e.clientX - this.clickPosition.x
 
         if (this.targetResize == 'top') {
-            this.updateSize({ 
-                w: this.originSize.w, 
-                h: this.originSize.h - h,
-                x: this.originSize.x,
-                y: this.originSize.y + h
-            })
+            this.resizeTop({ w: w, h: h })
         }
 
         if (this.targetResize == 'bottom') {
-            this.updateSize({ 
-                w: this.originSize.w, 
-                h: this.originSize.h + h,
-                x: this.originSize.x,
-                y: this.originSize.y
-            })
+            this.resizeBottom({ w: w, h: h })
         }
 
         if (this.targetResize == 'left') {
-            this.updateSize({ 
-                w: this.originSize.w - w, 
-                h: this.originSize.h,
-                x: this.originSize.x + w,
-                y: this.originSize.y
-            })
+            this.resizeLeft({ w: w, h: h })
         }
 
         if (this.targetResize == 'right') {
-            this.updateSize({ 
-                w: this.originSize.w + w, 
-                h: this.originSize.h,
-                x: this.originSize.x,
-                y: this.originSize.y
-            })
+            this.resizeRight({ w: w, h: h })
         }
+
+        if (this.targetResize == 'top-left') {
+            this.resizeTopLeft({ w: w, h: h })
+        }
+
+        if (this.targetResize == 'top-right') {
+            this.resizeTopRight({ w: w, h: h })
+        }
+
+        if (this.targetResize == 'bottom-left') {
+            this.resizeBottomLeft({ w: w, h: h })
+        }
+
+        if (this.targetResize == 'bottom-right') {
+            this.resizeBottomRight({ w: w, h: h })
+        }
+    }
+
+    resizeTop({ h, w }) {
+        this.updateSize({ 
+            w: this.originSize.w, 
+            h: this.originSize.h - h,
+            x: this.originSize.x,
+            y: this.originSize.y + h
+        })
+    }
+
+    resizeBottom({ h, w }) {
+        this.updateSize({ 
+            w: this.originSize.w, 
+            h: this.originSize.h + h,
+            x: this.originSize.x,
+            y: this.originSize.y
+        })
+    }
+
+    resizeLeft({ h, w }) {
+        this.updateSize({ 
+            w: this.originSize.w - w, 
+            h: this.originSize.h,
+            x: this.originSize.x + w,
+            y: this.originSize.y
+        })
+    }
+
+    resizeRight({ h, w }) {
+        this.updateSize({ 
+            w: this.originSize.w + w, 
+            h: this.originSize.h,
+            x: this.originSize.x,
+            y: this.originSize.y
+        })
+    }
+
+    resizeTopLeft({ h, w }) {
+        this.updateSize({ 
+            w: this.originSize.w - w, 
+            h: this.originSize.h - h,
+            x: this.originSize.x + w,
+            y: this.originSize.y + h
+        })
+    }
+
+    resizeTopRight({ h, w }) {
+        this.updateSize({ 
+            w: this.originSize.w + w,
+            h: this.originSize.h - h,
+            x: this.originSize.x,
+            y: this.originSize.y + h
+        })
+    }
+    
+    resizeBottomLeft({ h, w }) {
+        this.updateSize({ 
+            w: this.originSize.w - w, 
+            h: this.originSize.h + h,
+            x: this.originSize.x + w,
+            y: this.originSize.y
+        })
+    }
+
+    resizeBottomRight({ h, w }) {
+        this.updateSize({ 
+            w: this.originSize.w+ w, 
+            h: this.originSize.h + h,
+            x: this.originSize.x,
+            y: this.originSize.y
+        })
     }
 
     enableResize(e) {
