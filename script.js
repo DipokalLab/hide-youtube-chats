@@ -38,91 +38,23 @@ class HideBox {
         this.box.style.zIndex = '10000000000'
         this.box.style.cursor = 'grab'
 
-        const topResize = this.createResize({
-            w: '100%',
-            h: '1rem',
-            x: '0px',
-            y: '-1rem',
-            ref: 'top',
-            cursorStyle: 'ns-resize'
-        })
-
-        const bottomResize = this.createResize({
-            w: '100%',
-            h: '1rem',
-            x: '0px',
-            y: '100%',
-            ref: 'bottom',
-            cursorStyle: 'ns-resize'
-        })
-
-        const leftResize = this.createResize({
-            w: '1rem',
-            h: '100%',
-            x: '-1rem',
-            y: '0px',
-            ref: 'left',
-            cursorStyle: 'ew-resize'
-        })
-
-        const rightResize = this.createResize({
-            w: '1rem',
-            h: '100%',
-            x: '100%',
-            y: '0px',
-            ref: 'right',
-            cursorStyle: 'ew-resize'
-        })
-
-        const topLeftResize = this.createResize({
-            w: '1rem',
-            h: '1rem',
-            x: '-1rem',
-            y: '-1rem',
-            ref: 'top-left',
-            cursorStyle: 'nwse-resize'
-        })
-
-
-        const topRightResize = this.createResize({
-            w: '1rem',
-            h: '1rem',
-            x: '100%',
-            y: '-1rem',
-            ref: 'top-right',
-            cursorStyle: 'nesw-resize'
-        })
-
-        
-        const bottomLeftResize = this.createResize({
-            w: '1rem',
-            h: '1rem',
-            x: '-1rem',
-            y: '100%',
-            ref: 'bottom-left',
-            cursorStyle: 'nesw-resize'
-        })
-
-        const bottomRightResize = this.createResize({
-            w: '1rem',
-            h: '1rem',
-            x: '100%',
-            y: '100%',
-            ref: 'bottom-right',
-            cursorStyle: 'nwse-resize'
-        })
-
+        const resizeStyleConfig = [
+            { w: '100%', h: '1rem', x: '0px', y: '-1rem', ref: 'top', cursorStyle: 'ns-resize' },
+            { w: '100%', h: '1rem', x: '0px', y: '100%', ref: 'bottom', cursorStyle: 'ns-resize' },
+            { w: '1rem', h: '100%', x: '-1rem', y: '0px', ref: 'left', cursorStyle: 'ew-resize' },
+            { w: '1rem', h: '100%', x: '100%', y: '0px', ref: 'right', cursorStyle: 'ew-resize' },
+            { w: '1rem', h: '1rem', x: '-1rem', y: '-1rem', ref: 'top-left', cursorStyle: 'nwse-resize' },
+            { w: '1rem', h: '1rem', x: '100%', y: '-1rem', ref: 'top-right', cursorStyle: 'nesw-resize' },
+            { w: '1rem', h: '1rem', x: '-1rem', y: '100%', ref: 'bottom-left', cursorStyle: 'nesw-resize' },
+            { w: '1rem', h: '1rem', x: '100%', y: '100%', ref: 'bottom-right', cursorStyle: 'nwse-resize' }
+        ]
+    
         this.root.appendChild(this.box)
-        this.root.appendChild(topResize)
-        this.root.appendChild(bottomResize)
-        this.root.appendChild(leftResize)
-        this.root.appendChild(rightResize)
-        this.root.appendChild(topLeftResize)
-        this.root.appendChild(topRightResize)
-        this.root.appendChild(bottomLeftResize)
-        this.root.appendChild(bottomRightResize)
-
-        
+        for (let index = 0; index < resizeStyleConfig.length; index++) {
+            const element = resizeStyleConfig[index];
+            const resize = this.createResize(element)
+            this.root.appendChild(resize)
+        }   
     }
 
     createResize({ w, h, x, y, ref, cursorStyle }) {
@@ -163,108 +95,26 @@ class HideBox {
         let h = e.clientY - this.clickPosition.y
         let w = e.clientX - this.clickPosition.x
 
-        if (this.targetResize == 'top') {
-            this.resizeTop({ w: w, h: h })
+        const resizeFunctionList = {
+            top: () => {this.resizePosition({ w: 0, h: -h, x: 0, y: h })},
+            bottom: () => {this.resizePosition({ w: 0, h: h, x: 0, y: 0 })},
+            left: () => {this.resizePosition({ w: -w, h: 0, x: w, y: 0 })},
+            right: () => {this.resizePosition({ w: w, h: 0, x: 0, y: 0 })},
+            topleft:  () => {this.resizePosition({ w: -w, h: -h, x: w, y: h })},
+            topright: () => {this.resizePosition({ w: w, h: -h, x: 0, y: h })},
+            bottomleft: () => {this.resizePosition({ w: -w, h: h, x: w, y: 0 })},
+            bottomright: () => {this.resizePosition({ w: w, h: h, x: 0, y: 0 })}
         }
 
-        if (this.targetResize == 'bottom') {
-            this.resizeBottom({ w: w, h: h })
-        }
-
-        if (this.targetResize == 'left') {
-            this.resizeLeft({ w: w, h: h })
-        }
-
-        if (this.targetResize == 'right') {
-            this.resizeRight({ w: w, h: h })
-        }
-
-        if (this.targetResize == 'top-left') {
-            this.resizeTopLeft({ w: w, h: h })
-        }
-
-        if (this.targetResize == 'top-right') {
-            this.resizeTopRight({ w: w, h: h })
-        }
-
-        if (this.targetResize == 'bottom-left') {
-            this.resizeBottomLeft({ w: w, h: h })
-        }
-
-        if (this.targetResize == 'bottom-right') {
-            this.resizeBottomRight({ w: w, h: h })
-        }
+        resizeFunctionList[this.targetResize.replace('-', '')]()
     }
 
-    resizeTop({ h, w }) {
-        this.updateSize({ 
-            w: this.originSize.w, 
-            h: this.originSize.h - h,
-            x: this.originSize.x,
-            y: this.originSize.y + h
-        })
-    }
-
-    resizeBottom({ h, w }) {
-        this.updateSize({ 
-            w: this.originSize.w, 
-            h: this.originSize.h + h,
-            x: this.originSize.x,
-            y: this.originSize.y
-        })
-    }
-
-    resizeLeft({ h, w }) {
-        this.updateSize({ 
-            w: this.originSize.w - w, 
-            h: this.originSize.h,
-            x: this.originSize.x + w,
-            y: this.originSize.y
-        })
-    }
-
-    resizeRight({ h, w }) {
+    resizePosition({ h, w, x, y }) {
         this.updateSize({ 
             w: this.originSize.w + w, 
-            h: this.originSize.h,
-            x: this.originSize.x,
-            y: this.originSize.y
-        })
-    }
-
-    resizeTopLeft({ h, w }) {
-        this.updateSize({ 
-            w: this.originSize.w - w, 
-            h: this.originSize.h - h,
-            x: this.originSize.x + w,
-            y: this.originSize.y + h
-        })
-    }
-
-    resizeTopRight({ h, w }) {
-        this.updateSize({ 
-            w: this.originSize.w + w,
-            h: this.originSize.h - h,
-            x: this.originSize.x,
-            y: this.originSize.y + h
-        })
-    }
-    
-    resizeBottomLeft({ h, w }) {
-        this.updateSize({ 
-            w: this.originSize.w - w, 
             h: this.originSize.h + h,
-            x: this.originSize.x + w,
-            y: this.originSize.y
-        })
-    }
-
-    resizeBottomRight({ h, w }) {
-        this.updateSize({ 
-            w: this.originSize.w+ w, 
-            h: this.originSize.h + h,
-            x: this.originSize.x,
-            y: this.originSize.y
+            x: this.originSize.x + x,
+            y: this.originSize.y + y
         })
     }
 
@@ -307,24 +157,12 @@ class HideBox {
     }
 }
 
-// class ResizeHideBox {
-//     constructor() {
-
-//     }
-
-//     create() {
-
-//     }
-
-//     render() {
-//         return 
-//     }
-// }
 
 window.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
         const box = new HideBox()
         document.querySelector("html").insertAdjacentElement("beforeend", box.render())
+
     }, 1000);
 
 });
